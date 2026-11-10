@@ -74,3 +74,17 @@ int page_alloc (PageManager *pm, uint32_t *page_num) {
 	return PM_OK;
 }
 
+int page_write (PageManager *pm, uint32_t page_num, const void *buf) {
+	if(page_num >= pm ->  page_count) {
+		 return PM_ERR_ARG;
+	 }
+	 
+	 off_t offset = page_num * PAGE_SIZE;
+	 ssize_t n = pwrite(pm->fd, buf, PAGE_SIZE, offset);
+	 
+	 if(n != PAGE_SIZE) {
+		 return PM_ERR_IO;
+	 }
+	 
+	 return PM_OK;
+ }
