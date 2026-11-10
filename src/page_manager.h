@@ -38,7 +38,10 @@ typedef enum {
  } PMStatus;
  
 PMStatus page_open  (const char *path, PageManager *pm);
-int page_read  (PageManager *pm, uint32_t page_num, void *buf);
-int page_write (PageManager *pm, uint32_t page_num, void *buf);
-int page_alloc (PageManager *pm, uint32_t *page_num);
-void page_close (PageManager *pm);	
+PMStatus page_read  (PageManager *pm, uint32_t page_num, void *buf);
+PMStatus page_write (PageManager *pm, uint32_t page_num, const void *buf);
+PMStatus page_alloc (PageManager *pm, uint32_t *page_num);
+PMStatus page_flush (PageManager *pm);
+void     page_close (PageManager *pm);
+
+#endif
