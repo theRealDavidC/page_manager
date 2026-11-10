@@ -106,4 +106,29 @@ PMStatus page_read(PageManager *pm, uint32_t page_num, void *buf) {
     return PM_OK;
 }
 
+PMStatus page_flush(PageManager *pm) {
+
+    uint8_t buf[PAGE_SIZE];
+    memset(buf, 0, PAGE_SIZE);
+
+    uint32_t magic = PM_MAGIC;
+    uint16_t page_size = PAGE_SIZE;
+    uint32_t page_count = pm->page_count;
+
+    memcpy(buf + 0, &magic, 4);
+    memcpy(buf + 4, &page_size, 2);
+    memcpy(buf + 6, &page_count, 4);
+
+    ssize_t n = pwrite(pm->fd, buf, PAGE_SIZE, 0);
+    if (n != PAGE_SIZE) {
+        return PM_ERR_IO;
+    }
+
+    int sync = fsync(pm->fd);
+    if (sync == -1) {
+        return PM_ERR_IO;
+    }
+
+    return PM_OK;
+}
 
