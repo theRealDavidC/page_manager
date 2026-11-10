@@ -4,6 +4,7 @@
 #include <string.h> /* memset(), memcpy() */
 #include <errno.h> /* errno, ENOENT */
 #include <stdint.h> /* uint8_t for the raw byte buffer */
+#include <stdio.h>
 
 PMStatus page_open(const char *path, PageManager *pm) {
 
@@ -75,12 +76,12 @@ PMStatus page_alloc(PageManager *pm, uint32_t *page_num) {
     return PM_OK;
 }
 
-int page_write (PageManager *pm, uint32_t page_num, const void *buf) {
+PMStatus page_write (PageManager *pm, uint32_t page_num, const void *buf) {
 	if(page_num >= pm ->  page_count) {
 		 return PM_ERR_ARG;
 	 }
 	 
-	 off_t offset = page_num * PAGE_SIZE;
+	 off_t offset = (off_t)page_num * PAGE_SIZE;
 	 ssize_t n = pwrite(pm->fd, buf, PAGE_SIZE, offset);
 	 
 	 if(n != PAGE_SIZE) {
