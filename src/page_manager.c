@@ -88,18 +88,19 @@ int page_write (PageManager *pm, uint32_t page_num, const void *buf) {
 	 
 	 return PM_OK;
  }
- 
- int page_read  (PageManager *pm, uint32_t page_num, void *buf) {
-	 if(page_num >= pm -> page_count) {
-		 return PM_ERR_ARG;
-	 }
-	 
-	 off_t offset = page_num * PAGE_SIZE;	
-	 ssize_t n = pread(pm->fd, buf, PAGE_SIZE, offset);
-	 
-	 if(n != PAGE_SIZE) {
-		 return PM_ERR_IO;
-	 }
-	 
-	 return PM_OK;
- }
+
+PMStatus page_read(PageManager *pm, uint32_t page_num, void *buf) {
+
+    if (page_num >= pm->page_count) {
+        return PM_ERR_ARG;
+    }
+
+    off_t   offset = (off_t)page_num * PAGE_SIZE;
+    ssize_t n      = pread(pm->fd, buf, PAGE_SIZE, offset);
+
+    if (n != PAGE_SIZE) {
+        return PM_ERR_IO;
+    }
+
+    return PM_OK;
+}
