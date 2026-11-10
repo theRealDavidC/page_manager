@@ -132,3 +132,16 @@ PMStatus page_flush(PageManager *pm) {
     return PM_OK;
 }
 
+void page_close(PageManager *pm) {
+
+    PMStatus err = page_flush(pm);
+    if (err != PM_OK) {
+        printf("page_close: flush failed\n");
+    }
+
+    close(pm->fd);
+
+    pm->fd         = -1;
+    pm->page_count = 0;
+}
+
