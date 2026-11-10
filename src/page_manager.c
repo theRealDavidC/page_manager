@@ -55,3 +55,22 @@ PMStatus page_open(const char *path, PageManager *pm) {
     pm->fd = fd;
     return PM_OK;
 }
+
+int page_alloc (PageManager *pm, uint32_t *page_num) {
+	int new_id = pm-> page_count;
+	off_t offset = (off_t)new_id * PAGE_SIZE;
+	
+	uint8_t buf[PAGE_SIZE];
+    memset(buf, 0, PAGE_SIZE);
+    ssize_t n = pwrite(pm->fd, buf, PAGE_SIZE, offset);
+	
+	if(n != PAGE_SIZE) {
+		return PM_ERR_IO;
+	}
+	
+	pm->page_count = pm->page_count + 1;
+	*page_num = new_id;
+		
+	return PM_OK;
+}
+
