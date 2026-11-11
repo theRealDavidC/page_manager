@@ -32,7 +32,7 @@ int main() {
   ph.free_space_offset = 8;
   ph.slot_count = 0;
   
-  memcpy(buf, &hd, sizeof(PageHeader));
+  memcpy(buf, &ph, sizeof(PageHeader));
   
   s = page_write(&pm, page_num, buf);
   if(s != PM_OK) {
@@ -42,20 +42,24 @@ int main() {
   
   printf("wrote page %u\n", page_num);
   
-  memset(buf, 0, 0);
+  memset(buf, 0, PAGE_SIZE);
+  
   
   s = page_read(&pm, page_num, buf);
   if(s != PM_OK) {
-	  print("Read failed: %d\n" s);
+	  printf("Read failed: %d\n", s);
 	  return 1;
   }
   
+  PageHeader ph_read;
+  memcpy(&ph_read, buf, sizeof(PageHeader));
+
   printf("Read page %u\n", page_num);
-  printf("Page number: %u\n", ph.page_number);
-  printf("Free space offset on the read is: %u\n", ph.free_space_offset);
-  printf("Slot count based on our read is: %u\n", ph.slot_count);
+  printf("page_number: %u\n", ph_read.page_number);
+  printf("free_space_offset: %u\n", ph_read.free_space_offset);
+  printf("slot_count: %u\n", ph_read.slot_count);
   
-  void closed = page_close(&pm);
+  page_close(&pm);
   printf("Page manager closed");
   
   s = page_open("test.db", &pm);
