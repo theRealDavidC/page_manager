@@ -60,7 +60,7 @@ int main() {
   printf("slot_count: %u\n", ph_read.slot_count);
   
   page_close(&pm);
-  printf("Page manager closed");
+  printf("Page manager closed\n");
   
   s = page_open("test.db", &pm);
   if (s != PM_OK) {
@@ -68,7 +68,7 @@ int main() {
    return 1; 
    }
    
-  printf("%d recovered", pm.page_count);
+  printf("%u recovered\n", pm.page_count);
   
   page_close(&pm);
 }
